@@ -156,9 +156,6 @@
             position: relative;
         }
 
-        /* Organic vertical offsets for rhythm */
-        .team-grid > :nth-child(3n+2) { transform: translateY(2.5rem); }
-
         .team-member {
             text-align: center;
             text-decoration: none;
@@ -171,19 +168,9 @@
             animation-delay: calc(var(--i, 0) * 0.1s + 0.3s);
         }
 
-        .team-grid > :nth-child(3n+2).team-member {
-            /* keep the offset when animation completes */
-            animation-name: memberInOffset;
-        }
-
         @keyframes memberIn {
             from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes memberInOffset {
-            from { opacity: 0; transform: translateY(calc(2.5rem + 40px)); }
-            to { opacity: 1; transform: translateY(2.5rem); }
         }
 
         .team-member:hover .member-name { color: var(--warm); }
@@ -417,41 +404,56 @@
             margin-left: auto; margin-right: auto;
         }
 
-        .modal-link {
-            display: inline-block;
+        /* Modal navigation (prev / counter / next) */
+        .modal-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .modal-nav-btn {
+            background: none;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 50%;
+            width: 42px; height: 42px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            color: var(--muted);
+            font-family: var(--display);
+            font-size: 1.1rem;
+            line-height: 1;
+            padding: 0;
+            transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        [data-theme="dark"] .modal-nav-btn {
+            border-color: rgba(240, 240, 240, 0.2);
+        }
+
+        .modal-nav-btn:hover {
+            color: var(--warm);
+            border-color: var(--warm);
+        }
+
+        .modal-nav-btn[data-dir="prev"]:hover { transform: translateX(-3px); }
+        .modal-nav-btn[data-dir="next"]:hover { transform: translateX(3px); }
+
+        .modal-count {
             font-family: var(--mono);
-            font-size: 0.78rem;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--fg);
-            text-decoration: none;
-            padding: 0.9rem 2.2rem;
-            border: 1px solid var(--warm);
-            transition: all 0.4s ease;
-            position: relative; overflow: hidden;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: var(--muted);
+            min-width: 60px;
+            text-align: center;
         }
-
-        .modal-link::before {
-            content: '';
-            position: absolute; inset: 0;
-            background: var(--warm);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-            z-index: 0;
-        }
-
-        .modal-link:hover::before { transform: scaleX(1); }
-        .modal-link:hover { color: var(--bg); }
-        .modal-link span { position: relative; z-index: 1; }
 
         @media (max-width: 900px) {
             nav { padding: 1.2rem 1.5rem; }
             .team-hero { padding: 7rem 1.5rem 3rem; }
             .team-grid-wrapper { padding: 2rem 1.5rem 5rem; }
             .team-grid { grid-template-columns: repeat(2, 1fr); gap: 3.5rem 1.5rem; }
-            .team-grid > :nth-child(3n+2) { transform: none; }
-            .team-grid > :nth-child(3n+2).team-member { animation-name: memberIn; }
             .photo-circle { width: 160px; height: 160px; }
             footer { padding: 1.5rem; flex-direction: column; gap: 0.8rem; text-align: center; }
             .modal-card { padding: 3rem 1.8rem 2.5rem; }
@@ -500,7 +502,6 @@
                     <img src="team/photos/gijs_pothof.jpeg" alt="Gijs Pothof">
                 </div>
                 <div class="member-name">Gijs</div>
-                <div class="member-role">Founder · Design &amp; Facilitation</div>
                 <span class="member-more">Read more →</span>
             </a>
 
@@ -511,89 +512,51 @@
                     <img src="team/photos/ludo_keizer.jpeg" alt="Ludo Keizer">
                 </div>
                 <div class="member-name">Ludo</div>
-                <div class="member-role">Project Lead &amp; Design</div>
                 <span class="member-more">View profile →</span>
             </a>
 
             <a href="team/scott.html" class="team-member" style="--i: 2"
-               data-name="Scott" data-role="Health, Vitality & Strength"
+               data-name="Scott Everduim" data-role="Health, Vitality & Strength"
                data-photo="team/photos/scott.jpeg"
                data-bio="Scott makes you move. He is an expert in health, vitality and strength for individuals and teams. And he is the muscle of our team!">
                 <div class="photo-circle">
                     <img src="team/photos/scott.jpeg" alt="Scott">
                 </div>
                 <div class="member-name">Scott</div>
-                <div class="member-role">Health, Vitality &amp; Strength</div>
-                <p class="member-bio">Scott makes you move. He is an expert in health, vitality and strength for individuals and teams. And he is the muscle of our team!</p>
-            </a>
-
-            <a href="team/izam.html" class="team-member" style="--i: 3"
-               data-name="Izam" data-role="Project Lead"
-               data-initial="I">
-                <div class="photo-circle">
-                    <div class="placeholder">I</div>
-                </div>
-                <div class="member-name">Izam</div>
-                <div class="member-role">Project Lead</div>
                 <span class="member-more">View profile →</span>
             </a>
 
-            <a href="team/ivan.html" class="team-member" style="--i: 4"
-               data-name="Iván" data-role="Project Design"
-               data-initial="I">
-                <div class="photo-circle">
-                    <div class="placeholder">I</div>
-                </div>
-                <div class="member-name">Iván</div>
-                <div class="member-role">Project Design</div>
-                <span class="member-more">View profile →</span>
-            </a>
-
-            <a href="team/zara.html" class="team-member" style="--i: 5"
-               data-name="Zára" data-role="Care & Personal Development"
+<a href="team/zara.html" class="team-member" style="--i: 5"
+               data-name="Zára de Graaf" data-role="Care & Personal Development"
                data-photo="team/photos/zara.jpeg"
                data-bio="Zára really is about care. She inspires and guides people (youth and adults) in personal development journeys.">
                 <div class="photo-circle">
                     <img src="team/photos/zara.jpeg" alt="Zára">
                 </div>
                 <div class="member-name">Zára</div>
-                <div class="member-role">Care &amp; Personal Development</div>
-                <p class="member-bio">Zára really is about care. She inspires and guides people (youth and adults) in personal development journeys.</p>
+                <span class="member-more">View profile →</span>
             </a>
 
             <a href="team/esperanza.html" class="team-member" style="--i: 6"
-               data-name="Esperanza" data-role="Wellbeing & Creative Programs"
+               data-name="Esperanza Schaling" data-role="Wellbeing & Creative Programs"
                data-photo="team/photos/esperanza.jpeg"
                data-bio="Esperanza shines. She brightens up rooms and people's lives. With creative programs she helps youth and adults with their wellbeing.">
                 <div class="photo-circle">
                     <img src="team/photos/esperanza.jpeg" alt="Esperanza">
                 </div>
                 <div class="member-name">Esperanza</div>
-                <div class="member-role">Wellbeing &amp; Creative Programs</div>
-                <p class="member-bio">Esperanza shines. She brightens up rooms and people's lives. With creative programs she helps youth and adults with their wellbeing.</p>
-            </a>
-
-            <a href="team/zaina.html" class="team-member" style="--i: 7"
-               data-name="Zaina Pothof" data-role="Desk Research"
-               data-photo="team/photos/zaina_pothof.jpeg">
-                <div class="photo-circle">
-                    <img src="team/photos/zaina_pothof.jpeg" alt="Zaina Pothof">
-                </div>
-                <div class="member-name">Zaina</div>
-                <div class="member-role">Desk Research</div>
                 <span class="member-more">View profile →</span>
             </a>
 
-            <a href="team/melissa.html" class="team-member" style="--i: 8"
-               data-name="Melissa" data-role="Soulful Support"
+<a href="team/melissa.html" class="team-member" style="--i: 8"
+               data-name="Melissa Shim" data-role="Soulful Support"
                data-photo="team/photos/melissa.jpeg"
                data-bio="Melissa is soulful support. She makes the best food, music, and clothes. She manages lists, locations, and lord knows what else.">
                 <div class="photo-circle">
                     <img src="team/photos/melissa.jpeg" alt="Melissa">
                 </div>
                 <div class="member-name">Melissa</div>
-                <div class="member-role">Soulful Support</div>
-                <p class="member-bio">Melissa is soulful support. She makes the best food, music, and clothes. She manages lists, locations, and lord knows what else.</p>
+                <span class="member-more">View profile →</span>
             </a>
         </div>
     </div>
@@ -606,7 +569,11 @@
             <h2 class="modal-name" id="modalName"></h2>
             <p class="modal-role" id="modalRole"></p>
             <p class="modal-bio" id="modalBio"></p>
-            <a href="#" class="modal-link" id="modalLink"><span>View full profile →</span></a>
+            <div class="modal-nav">
+                <button class="modal-nav-btn" data-dir="prev" aria-label="Previous team member">&#8592;</button>
+                <span class="modal-count" id="modalCount"></span>
+                <button class="modal-nav-btn" data-dir="next" aria-label="Next team member">&#8594;</button>
+            </div>
         </div>
     </div>
 
@@ -646,31 +613,45 @@
             gridWrap.style.setProperty('--my', y + '%');
         });
 
-        // Modal
+        // Modal — opens on click, cycles through members with prev/next
         const modal = document.getElementById('memberModal');
         const modalPhoto = document.getElementById('modalPhoto');
         const modalName = document.getElementById('modalName');
         const modalRole = document.getElementById('modalRole');
         const modalBio = document.getElementById('modalBio');
-        const modalLink = document.getElementById('modalLink');
+        const modalCount = document.getElementById('modalCount');
         const modalClose = modal.querySelector('.modal-close');
 
-        const openModal = (member) => {
+        const members = Array.from(document.querySelectorAll('.team-member'));
+        let currentIndex = -1;
+
+        const renderModal = (index) => {
+            const member = members[index];
+            if (!member) return;
+            currentIndex = index;
+
             const name = member.dataset.name;
             const role = member.dataset.role;
             const photo = member.dataset.photo;
             const initial = member.dataset.initial;
-            const bio = member.dataset.bio || 'More about ' + (name.split(' ')[0]) + ' coming soon.';
-            const profile = member.getAttribute('href');
+            const bio = member.dataset.bio || '';
 
             modalPhoto.innerHTML = photo
                 ? '<img src="' + photo + '" alt="' + name + '">'
                 : '<div class="placeholder">' + (initial || name.charAt(0)) + '</div>';
             modalName.textContent = name;
             modalRole.textContent = role;
-            modalBio.textContent = bio;
-            modalLink.setAttribute('href', profile);
+            if (bio) {
+                modalBio.textContent = bio;
+                modalBio.style.display = '';
+            } else {
+                modalBio.style.display = 'none';
+            }
+            modalCount.textContent = (index + 1) + ' / ' + members.length;
+        };
 
+        const openModal = (index) => {
+            renderModal(index);
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         };
@@ -678,14 +659,27 @@
         const closeModal = () => {
             modal.classList.remove('active');
             document.body.style.overflow = '';
+            currentIndex = -1;
         };
 
-        document.querySelectorAll('.team-member').forEach((m) => {
+        const navigate = (dir) => {
+            if (currentIndex === -1) return;
+            const next = (currentIndex + dir + members.length) % members.length;
+            renderModal(next);
+        };
+
+        members.forEach((m, i) => {
             m.addEventListener('click', (e) => {
-                // Allow ctrl/cmd/middle-click to open profile directly in new tab
                 if (e.ctrlKey || e.metaKey || e.button === 1) return;
                 e.preventDefault();
-                openModal(m);
+                openModal(i);
+            });
+        });
+
+        modal.querySelectorAll('.modal-nav-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                navigate(btn.dataset.dir === 'next' ? 1 : -1);
             });
         });
 
@@ -694,7 +688,10 @@
             if (e.target === modal) closeModal();
         });
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+            if (!modal.classList.contains('active')) return;
+            if (e.key === 'Escape') closeModal();
+            else if (e.key === 'ArrowRight') { e.preventDefault(); navigate(1); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(-1); }
         });
     </script>
 
