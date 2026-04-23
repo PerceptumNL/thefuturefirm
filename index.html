@@ -236,26 +236,399 @@
             color: var(--muted); margin-top: 0.6rem;
         }
 
-        /* ── ABOUT ── */
-        .about {
-            padding: 6rem 3rem 8rem;
-            display: grid; grid-template-columns: 200px 1fr;
-            gap: 4rem; align-items: start;
+        /* ── LEADERSHIP & TEAM ── */
+        .leadership {
+            padding: 7rem 3rem 8rem;
+            position: relative;
         }
 
-        .about-text { max-width: 580px; }
-
-        .about-name {
-            font-family: var(--display); font-size: 1.8rem;
-            font-weight: 400; margin-bottom: 1.5rem;
+        .leadership-header {
+            max-width: 680px;
+            margin-bottom: 5rem;
         }
 
-        .about-text p {
-            font-size: 0.95rem; line-height: 1.8;
-            color: var(--muted); margin-bottom: 1.2rem;
+        .leadership-title {
+            font-family: var(--display);
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            font-weight: 400;
+            line-height: 1.15;
+            margin-top: 1rem;
+            letter-spacing: -0.01em;
         }
 
-        .about-text p strong { color: var(--fg); font-weight: 400; }
+        .leadership-title .warm { color: var(--warm); font-style: italic; }
+
+        .leader {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 4rem;
+            align-items: center;
+            padding-bottom: 3rem;
+            position: relative;
+        }
+
+        .leader-photo {
+            position: relative;
+            width: 300px; height: 300px;
+            display: block;
+            text-decoration: none;
+        }
+
+        .leader-photo-inner {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1.5px solid var(--fg);
+            background: var(--surface);
+            position: relative;
+            z-index: 2;
+        }
+
+        .leader-photo-inner img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .leader-photo:hover .leader-photo-inner img {
+            transform: scale(1.06);
+        }
+
+        .leader-photo::before {
+            content: '';
+            position: absolute;
+            inset: -14px;
+            border-radius: 50%;
+            border: 1px dashed var(--muted);
+            opacity: 0.35;
+            pointer-events: none;
+            animation: slowSpin 60s linear infinite;
+        }
+
+        .leader-photo::after {
+            content: '';
+            position: absolute;
+            inset: -28px;
+            border-radius: 50%;
+            border: 1px solid var(--muted);
+            opacity: 0.12;
+            pointer-events: none;
+        }
+
+        @keyframes slowSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        .leader-bio { max-width: 580px; }
+
+        .leader-bio .section-label {
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .leader-name {
+            font-family: var(--display);
+            font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+        }
+
+        .leader-role {
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        .leader-bio p {
+            font-size: 0.98rem;
+            line-height: 1.8;
+            color: var(--muted);
+            margin-bottom: 1.1rem;
+        }
+
+        .leader-bio p strong { color: var(--fg); font-weight: 400; }
+
+        /* Transition from Gijs to the team — echoes beliefs section rhythm */
+        .team-divider {
+            margin: 5rem 0 2.5rem;
+            padding-top: 3.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+        }
+
+        [data-theme="dark"] .team-divider {
+            border-top-color: rgba(240, 240, 240, 0.08);
+        }
+
+        .team-divider-title {
+            font-family: var(--display);
+            font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+            font-weight: 400;
+            line-height: 1.3;
+            margin-top: 1rem;
+            color: var(--fg);
+        }
+
+        .team-divider-title em {
+            font-style: italic;
+            color: var(--warm);
+        }
+
+        /* Team — list on the left, profile folds out to the right on hover */
+        .team-grid-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 480px) minmax(0, 1fr);
+            gap: 4rem;
+            align-items: start;
+            max-width: 1200px;
+            perspective: 1400px;
+        }
+
+        .team-items {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .team-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        [data-theme="dark"] .team-item {
+            border-bottom-color: rgba(240, 240, 240, 0.08);
+        }
+
+        .team-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .team-item-link {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: baseline;
+            gap: 1.5rem;
+            padding: 1.7rem 0;
+            text-decoration: none;
+            color: var(--fg);
+            position: relative;
+            transition: padding-left 0.45s cubic-bezier(0.2, 0.8, 0.3, 1);
+        }
+
+        .team-item-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%) scaleY(0);
+            width: 2px;
+            height: 60%;
+            background: var(--warm);
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1);
+            transform-origin: center;
+        }
+
+        .team-item.active .team-item-link {
+            padding-left: 1.2rem;
+        }
+
+        .team-item.active .team-item-link::before {
+            transform: translateY(-50%) scaleY(1);
+        }
+
+        .team-item-name {
+            font-family: var(--display);
+            font-size: clamp(1.3rem, 2.4vw, 1.85rem);
+            font-weight: 400;
+            line-height: 1.2;
+            transition: color 0.3s;
+        }
+
+        .team-item.active .team-item-name { color: var(--warm); }
+
+        .team-item-role {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-style: italic;
+            white-space: nowrap;
+            opacity: 0.85;
+            transition: opacity 0.3s;
+        }
+
+        .team-item.active .team-item-role { opacity: 1; }
+
+        /* The fold-out preview area — positioned beside the clicked name */
+        .team-preview-panel {
+            padding: 0 0 0 0.5rem;
+            transform-style: preserve-3d;
+            transition: transform 0.55s cubic-bezier(0.2, 0.9, 0.3, 1);
+            will-change: transform;
+        }
+
+        /* Content card that folds out */
+        .preview-card {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 1.8rem;
+            align-items: start;
+            opacity: 0;
+            transform: rotateY(-12deg) translateX(-18px) scale(0.97);
+            transform-origin: left center;
+            transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.05);
+        }
+
+        .team-preview-panel.active .preview-card {
+            opacity: 1;
+            transform: rotateY(0) translateX(0) scale(1);
+        }
+
+        .preview-photo {
+            width: 110px; height: 110px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1.5px solid var(--fg);
+            background: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .preview-photo img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-photo .placeholder {
+            font-family: var(--display);
+            font-size: 2.2rem;
+            color: var(--muted);
+            opacity: 0.3;
+        }
+
+        .preview-name {
+            font-family: var(--display);
+            font-size: 1.55rem;
+            font-weight: 400;
+            margin-bottom: 0.3rem;
+            line-height: 1.15;
+        }
+
+        .preview-role {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 1.1rem;
+            font-style: italic;
+        }
+
+        .preview-bio {
+            font-size: 0.93rem;
+            line-height: 1.7;
+            color: var(--muted);
+            margin-bottom: 1.3rem;
+        }
+
+        .preview-link {
+            display: inline-block;
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--fg);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            padding-bottom: 2px;
+            transition: color 0.3s, border-color 0.3s, letter-spacing 0.4s ease;
+        }
+
+        .preview-link:hover {
+            color: var(--warm);
+            border-color: var(--warm);
+            letter-spacing: 0.17em;
+        }
+
+        .team-footer {
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.8rem;
+        }
+
+        [data-theme="dark"] .team-footer {
+            border-top-color: rgba(240, 240, 240, 0.08);
+        }
+
+        .team-footer-prompt {
+            font-family: var(--display);
+            font-size: clamp(1.1rem, 2vw, 1.35rem);
+            line-height: 1.35;
+            color: var(--fg);
+            max-width: 360px;
+        }
+
+        .team-footer-prompt em {
+            font-style: italic;
+            color: var(--warm);
+        }
+
+        .team-section-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-family: var(--mono);
+            font-size: 0.82rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--fg);
+            text-decoration: none;
+            padding: 1.1rem 2.4rem;
+            border: 1px solid var(--warm);
+            transition: color 0.4s ease, gap 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .team-section-link::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--warm);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.45s ease;
+            z-index: 0;
+        }
+
+        .team-section-link span,
+        .team-section-link .arrow {
+            position: relative;
+            z-index: 1;
+        }
+
+        .team-section-link .arrow {
+            transition: transform 0.4s ease;
+            display: inline-block;
+        }
+
+        .team-section-link:hover { color: var(--bg); gap: 1.2rem; }
+        .team-section-link:hover::before { transform: scaleX(1); }
+        .team-section-link:hover .arrow { transform: translateX(4px); }
 
         /* ── CTA ── */
         .cta { padding: 10rem 3rem; text-align: center; }
@@ -312,7 +685,15 @@
             .how { padding: 4rem 1.5rem 5rem; }
             .how-grid { grid-template-columns: 1fr; }
             .beliefs { padding: 5rem 1.5rem; }
-            .about { grid-template-columns: 1fr; gap: 1.5rem; padding: 4rem 1.5rem 5rem; }
+            .leadership { padding: 5rem 1.5rem 6rem; }
+            .leader { grid-template-columns: 1fr; gap: 2.5rem; }
+            .leader-photo { width: 220px; height: 220px; }
+            .team-grid-layout { grid-template-columns: 1fr; gap: 0; }
+            .team-preview-panel { display: none; }
+            .team-item-link { grid-template-columns: 1fr auto; gap: 1rem; padding: 1.4rem 0; }
+            .team-item-role { font-size: 0.68rem; }
+            .team-footer { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+            .team-section-link { padding: 1rem 2rem; }
             .cta { padding: 6rem 1.5rem; }
             footer { padding: 1.5rem; flex-direction: column; gap: 0.8rem; text-align: center; }
             .hero-marker { display: none; }
@@ -434,24 +815,149 @@
 
     <div class="divider"></div>
 
-    <section class="about">
-        <span class="section-label">Founded by</span>
-        <div class="about-text">
-            <h3 class="about-name">Gijs Pothof</h3>
-            <p>
-                <strong>Facilitator, designer of transformative processes, and founder of The Future Firm.</strong>
-                For nearly two decades, Gijs has guided leaders and organisations through
-                the kind of change that can't be captured in a slide deck.
-            </p>
-            <p>
-                His work takes him from the Blue Mountains of Australia to boardrooms in Amsterdam —
-                always with the same question: <strong>what happens when people stop performing
-                and start exploring?</strong>
-            </p>
-            <p>
-                Gijs partners with facilitators, coaches, and specialists who share one thing:
-                a deep curiosity about what makes organisations — and the people in them — come alive.
-            </p>
+    <section class="leadership">
+        <div class="leadership-header">
+            <span class="section-label">Leadership &amp; Team</span>
+            <h2 class="leadership-title">Led by <span class="warm">curiosity</span>,<br>built by people.</h2>
+        </div>
+
+        <div class="leader">
+            <a href="team/gijs.html" class="leader-photo">
+                <div class="leader-photo-inner">
+                    <img src="team/photos/gijs_pothof.jpeg" alt="Gijs Pothof">
+                </div>
+            </a>
+            <div class="leader-bio">
+                <span class="section-label">Founded by</span>
+                <h3 class="leader-name">Gijs Pothof</h3>
+                <p class="leader-role">Founder · Facilitator · Designer of Transformative Processes</p>
+                <p>
+                    For nearly two decades, Gijs has guided leaders and organisations through
+                    the kind of change that can't be captured in a slide deck.
+                </p>
+                <p>
+                    His work takes him from the Blue Mountains of Australia to boardrooms in Amsterdam —
+                    always with the same question: <strong>what happens when people stop performing
+                    and start exploring?</strong>
+                </p>
+                <p>
+                    Gijs partners with facilitators, coaches, and specialists who share one thing:
+                    a deep curiosity about what makes organisations — and the people in them — come alive.
+                </p>
+            </div>
+        </div>
+
+        <div class="team-divider">
+            <span class="section-label">And the team</span>
+            <h3 class="team-divider-title">People Gijs <em>builds with</em>.</h3>
+        </div>
+
+        <div class="team-grid-layout" id="teamLayout">
+            <ul class="team-items">
+                <li class="team-item"
+                    data-name="Ludo Keizer" data-role="Project Lead &amp; Design"
+                    data-photo="team/photos/ludo_keizer.jpeg"
+                    data-href="team/ludo.html">
+                    <a href="team/ludo.html" class="team-item-link">
+                        <span class="team-item-name">Ludo Keizer</span>
+                        <span class="team-item-role">Project Lead &amp; Design</span>
+                    </a>
+                </li>
+
+                <li class="team-item"
+                    data-name="Scott" data-role="Health, Vitality &amp; Strength"
+                    data-photo="team/photos/scott.jpeg"
+                    data-bio="Scott makes you move. He is an expert in health, vitality and strength for individuals and teams. And he is the muscle of our team!"
+                    data-href="team/scott.html">
+                    <a href="team/scott.html" class="team-item-link">
+                        <span class="team-item-name">Scott</span>
+                        <span class="team-item-role">Health, Vitality &amp; Strength</span>
+                    </a>
+                </li>
+
+                <li class="team-item"
+                    data-name="Izam" data-role="Project Lead"
+                    data-initial="I"
+                    data-href="team/izam.html">
+                    <a href="team/izam.html" class="team-item-link">
+                        <span class="team-item-name">Izam</span>
+                        <span class="team-item-role">Project Lead</span>
+                    </a>
+                </li>
+
+                <li class="team-item"
+                    data-name="Iván" data-role="Project Design"
+                    data-initial="I"
+                    data-href="team/ivan.html">
+                    <a href="team/ivan.html" class="team-item-link">
+                        <span class="team-item-name">Iván</span>
+                        <span class="team-item-role">Project Design</span>
+                    </a>
+                </li>
+
+                <li class="team-item"
+                    data-name="Zára" data-role="Care &amp; Personal Development"
+                    data-photo="team/photos/zara.jpeg"
+                    data-bio="Zára really is about care. She inspires and guides people (youth and adults) in personal development journeys."
+                    data-href="team/zara.html">
+                    <a href="team/zara.html" class="team-item-link">
+                        <span class="team-item-name">Zára</span>
+                        <span class="team-item-role">Care &amp; Personal Development</span>
+                    </a>
+                </li>
+
+                <li class="team-item"
+                    data-name="Esperanza" data-role="Wellbeing &amp; Creative Programs"
+                    data-photo="team/photos/esperanza.jpeg"
+                    data-bio="Esperanza shines. She brightens up rooms and people's lives. With creative programs she helps youth and adults with their wellbeing."
+                    data-href="team/esperanza.html">
+                    <a href="team/esperanza.html" class="team-item-link">
+                        <span class="team-item-name">Esperanza</span>
+                        <span class="team-item-role">Wellbeing &amp; Creative Programs</span>
+                    </a>
+                </li>
+
+                <li class="team-item"
+                    data-name="Zaina Pothof" data-role="Desk Research"
+                    data-photo="team/photos/zaina_pothof.jpeg"
+                    data-href="team/zaina.html">
+                    <a href="team/zaina.html" class="team-item-link">
+                        <span class="team-item-name">Zaina Pothof</span>
+                        <span class="team-item-role">Desk Research</span>
+                    </a>
+                </li>
+
+                <li class="team-item"
+                    data-name="Melissa" data-role="Soulful Support"
+                    data-photo="team/photos/melissa.jpeg"
+                    data-bio="Melissa is soulful support. She makes the best food, music, and clothes. She manages lists, locations, and lord knows what else."
+                    data-href="team/melissa.html">
+                    <a href="team/melissa.html" class="team-item-link">
+                        <span class="team-item-name">Melissa</span>
+                        <span class="team-item-role">Soulful Support</span>
+                    </a>
+                </li>
+            </ul>
+
+            <aside class="team-preview-panel" id="teamPreviewPanel" aria-hidden="true">
+                <div class="preview-card" id="previewCard">
+                    <div class="preview-photo" id="previewPhoto"></div>
+                    <div class="preview-text">
+                        <h4 class="preview-name" id="previewName"></h4>
+                        <p class="preview-role" id="previewRole"></p>
+                        <p class="preview-bio" id="previewBio"></p>
+                        <a href="#" class="preview-link" id="previewLink">View full profile &#8594;</a>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <div class="team-footer">
+            <p class="team-footer-prompt">There's more to this team. <em>Meet them all.</em></p>
+            <a href="team.html" class="team-section-link">
+                <span>View the whole team</span>
+                <span class="arrow">&#8594;</span>
+            </a>
         </div>
     </section>
 
@@ -499,10 +1005,89 @@
             });
         }, { threshold: 0.15 });
 
-        document.querySelectorAll('.how-card, .belief-item').forEach((el, i) => {
-            el.style.transitionDelay = `${i * 0.08}s`;
+        document.querySelectorAll('.how-card, .belief-item, .team-item').forEach((el, i) => {
+            el.style.transitionDelay = `${(i % 4) * 0.08}s`;
             observer.observe(el);
         });
+
+        // Team list — click a name, fold out profile preview to the right
+        (function() {
+            const layout = document.getElementById('teamLayout');
+            const panel = document.getElementById('teamPreviewPanel');
+            if (!layout || !panel) return;
+
+            const items = layout.querySelectorAll('.team-item');
+            const photoEl = document.getElementById('previewPhoto');
+            const nameEl = document.getElementById('previewName');
+            const roleEl = document.getElementById('previewRole');
+            const bioEl = document.getElementById('previewBio');
+            const linkEl = document.getElementById('previewLink');
+
+            let currentKey = null;
+
+            const positionPanel = (item) => {
+                const layoutRect = layout.getBoundingClientRect();
+                const itemRect = item.getBoundingClientRect();
+                const offsetY = itemRect.top - layoutRect.top;
+                panel.style.transform = 'translateY(' + offsetY + 'px)';
+            };
+
+            const show = (item) => {
+                const key = item.dataset.href;
+                currentKey = key;
+
+                items.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                const d = item.dataset;
+                photoEl.innerHTML = d.photo
+                    ? '<img src="' + d.photo + '" alt="">'
+                    : '<div class="placeholder">' + (d.initial || d.name.charAt(0)) + '</div>';
+                nameEl.textContent = d.name;
+                roleEl.textContent = d.role;
+                if (d.bio) {
+                    bioEl.textContent = d.bio;
+                    bioEl.style.display = '';
+                } else {
+                    bioEl.style.display = 'none';
+                }
+                linkEl.setAttribute('href', d.href);
+                positionPanel(item);
+                panel.classList.add('active');
+            };
+
+            const hide = () => {
+                items.forEach(i => i.classList.remove('active'));
+                panel.classList.remove('active');
+                currentKey = null;
+            };
+
+            // Reposition on window resize if open
+            window.addEventListener('resize', () => {
+                if (!currentKey) return;
+                const active = layout.querySelector('.team-item.active');
+                if (active) positionPanel(active);
+            });
+
+            items.forEach(item => {
+                const link = item.querySelector('.team-item-link');
+                link.addEventListener('click', (e) => {
+                    // Allow ctrl/cmd/middle-click to navigate directly (open in new tab)
+                    if (e.ctrlKey || e.metaKey || e.button === 1) return;
+                    e.preventDefault();
+                    if (item.dataset.href === currentKey) {
+                        hide();
+                    } else {
+                        show(item);
+                    }
+                });
+            });
+
+            // Click outside the team layout closes the preview
+            document.addEventListener('click', (e) => {
+                if (currentKey && !layout.contains(e.target)) hide();
+            });
+        })();
 
     </script>
 

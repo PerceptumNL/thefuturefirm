@@ -200,6 +200,33 @@
             const current = document.documentElement.getAttribute('data-theme');
             setTheme(current === 'dark' ? 'light' : 'dark');
         });
+
+        // Smart back link — adapts label to where the user came from,
+        // and uses history.back() so scroll position is preserved.
+        (function() {
+            const backLink = document.querySelector('.back-link');
+            if (!backLink) return;
+            try {
+                const ref = document.referrer;
+                if (!ref) return;
+                const refUrl = new URL(ref);
+                if (refUrl.origin !== window.location.origin) return;
+                const path = refUrl.pathname;
+                const fromHomepage = path === '/' || path.endsWith('/index.html');
+                const fromTeam = path.endsWith('/team.html');
+                if (fromHomepage) {
+                    backLink.innerHTML = '&#8592; Back to the homepage';
+                    backLink.setAttribute('href', '../index.html');
+                }
+                if ((fromHomepage || fromTeam) && history.length > 1) {
+                    backLink.addEventListener('click', (e) => {
+                        if (e.ctrlKey || e.metaKey || e.button === 1) return;
+                        e.preventDefault();
+                        history.back();
+                    });
+                }
+            } catch (e) {}
+        })();
     </script>
 
 </body>

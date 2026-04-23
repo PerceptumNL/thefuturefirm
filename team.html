@@ -35,6 +35,7 @@
             --ember: #231f20;
             --muted: #6b6b6b;
             --surface: #f7f7f7;
+            --glow: rgba(35, 31, 32, 0.06);
         }
 
         [data-theme="dark"] {
@@ -44,6 +45,7 @@
             --ember: #f0f0f0;
             --muted: #999999;
             --surface: #222222;
+            --glow: rgba(240, 240, 240, 0.06);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -94,66 +96,150 @@
 
         /* ── TEAM HEADER ── */
         .team-hero {
-            padding: 8rem 3rem 4rem;
-            max-width: 700px;
+            padding: 9rem 3rem 5rem;
+            max-width: 720px;
+            opacity: 0;
+            animation: heroIn 1s ease 0.2s forwards;
+        }
+
+        @keyframes heroIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .team-title {
             font-family: var(--display);
-            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-size: clamp(2.2rem, 6vw, 4rem);
             font-weight: 400;
-            line-height: 1.15;
-            margin-top: 1rem;
-            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-top: 1.2rem;
+            margin-bottom: 1.8rem;
         }
 
         .team-title .warm { color: var(--warm); font-style: italic; }
 
         .team-intro {
-            font-size: 1.1rem; line-height: 1.8;
+            font-size: 1.1rem; line-height: 1.7;
             color: var(--muted); max-width: 560px;
         }
 
         /* ── TEAM GRID ── */
+        .team-grid-wrapper {
+            position: relative;
+            padding: 3rem 3rem 8rem;
+            max-width: 1320px;
+            margin: 0 auto;
+        }
+
+        /* Cursor-following radial glow */
+        .team-grid-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                circle 400px at var(--mx, 50%) var(--my, 50%),
+                var(--glow),
+                transparent 70%
+            );
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .team-grid-wrapper.active::before { opacity: 1; }
+
         .team-grid {
-            padding: 2rem 3rem 8rem;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 3rem 2rem;
-            max-width: 900px;
+            gap: 5rem 4rem;
+            position: relative;
         }
+
+        /* Organic vertical offsets for rhythm */
+        .team-grid > :nth-child(3n+2) { transform: translateY(2.5rem); }
 
         .team-member {
             text-align: center;
             text-decoration: none;
             color: inherit;
             display: block;
+            position: relative;
+            cursor: pointer;
+            opacity: 0;
+            animation: memberIn 0.8s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+            animation-delay: calc(var(--i, 0) * 0.1s + 0.3s);
+        }
+
+        .team-grid > :nth-child(3n+2).team-member {
+            /* keep the offset when animation completes */
+            animation-name: memberInOffset;
+        }
+
+        @keyframes memberIn {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes memberInOffset {
+            from { opacity: 0; transform: translateY(calc(2.5rem + 40px)); }
+            to { opacity: 1; transform: translateY(2.5rem); }
         }
 
         .team-member:hover .member-name { color: var(--warm); }
 
         .photo-circle {
-            width: 180px; height: 180px;
+            width: 220px; height: 220px;
             border-radius: 50%;
-            margin: 0 auto 1.2rem;
+            margin: 0 auto 1.5rem;
             overflow: hidden;
             border: 1.5px solid var(--fg);
             position: relative;
             background: var(--surface);
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.3, 1), box-shadow 0.5s ease;
+        }
+
+        .team-member:hover .photo-circle {
+            transform: scale(1.06);
+            box-shadow: 0 0 0 8px rgba(35, 31, 32, 0.04),
+                        0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] .team-member:hover .photo-circle {
+            box-shadow: 0 0 0 8px rgba(240, 240, 240, 0.05),
+                        0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
         .photo-circle img {
             width: 100%; height: 100%;
             object-fit: cover;
             filter: grayscale(100%);
-            transition: filter 0.5s ease;
+            transition: filter 0.6s ease, transform 0.8s ease;
         }
 
         .team-member:hover .photo-circle img {
             filter: grayscale(0%);
+            transform: scale(1.04);
         }
 
-        /* Placeholder for missing photos */
+        /* Pulsing ring accent */
+        .photo-circle::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 1px solid var(--warm);
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            pointer-events: none;
+        }
+
+        .team-member:hover .photo-circle::after {
+            opacity: 0.35;
+            transform: scale(1);
+        }
+
         .photo-circle .placeholder {
             width: 100%; height: 100%;
             display: flex; align-items: center; justify-content: center;
@@ -165,18 +251,49 @@
 
         .member-name {
             font-family: var(--display);
-            font-size: 1rem;
+            font-size: 1.2rem;
             font-weight: 400;
-            margin-bottom: 0.3rem;
-            transition: color 0.3s;
+            margin-bottom: 0.4rem;
+            transition: color 0.3s, letter-spacing 0.4s ease;
         }
+
+        .team-member:hover .member-name { letter-spacing: 0.03em; }
 
         .member-role {
             font-family: var(--mono);
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
             color: var(--muted);
+            margin-bottom: 1rem;
+        }
+
+        .member-bio {
+            font-size: 0.9rem;
+            line-height: 1.65;
+            color: var(--muted);
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        /* "More" indicator that appears on hover for members with bio */
+        .member-more {
+            display: inline-block;
+            margin-top: 0.8rem;
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: opacity 0.4s ease, transform 0.4s ease, color 0.3s ease;
+        }
+
+        .team-member:hover .member-more {
+            opacity: 1;
+            transform: translateY(0);
+            color: var(--warm);
         }
 
         .divider {
@@ -194,17 +311,160 @@
         footer a { color: var(--muted); text-decoration: none; transition: color 0.3s; }
         footer a:hover { color: var(--warm); }
 
+        /* ── MODAL ── */
+        .member-modal {
+            position: fixed; inset: 0; z-index: 200;
+            display: flex; align-items: center; justify-content: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        [data-theme="dark"] .member-modal {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .member-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-card {
+            background: var(--bg);
+            color: var(--fg);
+            max-width: 540px;
+            width: 100%;
+            padding: 4rem 3rem 3rem;
+            text-align: center;
+            border-radius: 4px;
+            position: relative;
+            transform: translateY(30px) scale(0.96);
+            transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.25, 1.1);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        .member-modal.active .modal-card {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem; right: 1.2rem;
+            background: none; border: none;
+            font-size: 1.5rem; cursor: pointer;
+            color: var(--muted);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: color 0.3s, background 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--warm);
+            background: var(--surface);
+        }
+
+        .modal-photo {
+            width: 160px; height: 160px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 1.8rem;
+            border: 1.5px solid var(--fg);
+        }
+
+        .modal-photo img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-photo .placeholder {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--display);
+            font-size: 2.8rem;
+            color: var(--muted);
+            opacity: 0.3;
+            background: var(--surface);
+        }
+
+        .modal-name {
+            font-family: var(--display);
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+        }
+
+        .modal-role {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 1.8rem;
+        }
+
+        .modal-bio {
+            font-size: 1rem;
+            line-height: 1.75;
+            color: var(--muted);
+            margin-bottom: 2.2rem;
+            max-width: 420px;
+            margin-left: auto; margin-right: auto;
+        }
+
+        .modal-link {
+            display: inline-block;
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--fg);
+            text-decoration: none;
+            padding: 0.9rem 2.2rem;
+            border: 1px solid var(--warm);
+            transition: all 0.4s ease;
+            position: relative; overflow: hidden;
+        }
+
+        .modal-link::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: var(--warm);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+            z-index: 0;
+        }
+
+        .modal-link:hover::before { transform: scaleX(1); }
+        .modal-link:hover { color: var(--bg); }
+        .modal-link span { position: relative; z-index: 1; }
+
         @media (max-width: 900px) {
             nav { padding: 1.2rem 1.5rem; }
-            .team-hero { padding: 6rem 1.5rem 3rem; }
-            .team-grid { padding: 1.5rem 1.5rem 5rem; grid-template-columns: repeat(2, 1fr); gap: 2rem 1.5rem; }
-            .photo-circle { width: 140px; height: 140px; }
+            .team-hero { padding: 7rem 1.5rem 3rem; }
+            .team-grid-wrapper { padding: 2rem 1.5rem 5rem; }
+            .team-grid { grid-template-columns: repeat(2, 1fr); gap: 3.5rem 1.5rem; }
+            .team-grid > :nth-child(3n+2) { transform: none; }
+            .team-grid > :nth-child(3n+2).team-member { animation-name: memberIn; }
+            .photo-circle { width: 160px; height: 160px; }
             footer { padding: 1.5rem; flex-direction: column; gap: 0.8rem; text-align: center; }
+            .modal-card { padding: 3rem 1.8rem 2.5rem; }
         }
 
         @media (max-width: 500px) {
-            .team-grid { grid-template-columns: 1fr; }
+            .team-grid { grid-template-columns: 1fr; gap: 3.5rem 0; }
             .photo-circle { width: 200px; height: 200px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .team-hero, .team-member { animation: none; opacity: 1; }
+            .photo-circle::before { animation: none; }
         }
     </style>
     <script src="https://analytics.perceptum.nl/liveview.js?key=lv_live_FKiLqqr_XVGGvdsb93ct6i6ziZgJ_EJS" defer></script>
@@ -230,79 +490,125 @@
 
     <div class="divider"></div>
 
-    <section class="team-grid">
-        <a href="team/gijs.html" class="team-member">
-            <div class="photo-circle">
-                <img src="team/photos/gijs_pothof.jpeg" alt="Gijs Pothof">
-            </div>
-            <div class="member-name">Gijs</div>
-            <div class="member-role">Design & Facilitation</div>
-        </a>
+    <div class="team-grid-wrapper">
+        <div class="team-grid">
+            <a href="team/gijs.html" class="team-member" style="--i: 0"
+               data-name="Gijs Pothof" data-role="Founder · Design & Facilitation"
+               data-photo="team/photos/gijs_pothof.jpeg"
+               data-bio="Facilitator, designer of transformative processes, and founder of The Future Firm. For nearly two decades, Gijs has guided leaders and organisations through the kind of change that can't be captured in a slide deck.">
+                <div class="photo-circle">
+                    <img src="team/photos/gijs_pothof.jpeg" alt="Gijs Pothof">
+                </div>
+                <div class="member-name">Gijs</div>
+                <div class="member-role">Founder · Design &amp; Facilitation</div>
+                <span class="member-more">Read more →</span>
+            </a>
 
-        <a href="team/ludo.html" class="team-member">
-            <div class="photo-circle">
-                <img src="team/photos/ludo_keizer.jpeg" alt="Ludo Keizer">
-            </div>
-            <div class="member-name">Ludo</div>
-            <div class="member-role">Project Lead & Design</div>
-        </a>
+            <a href="team/ludo.html" class="team-member" style="--i: 1"
+               data-name="Ludo Keizer" data-role="Project Lead & Design"
+               data-photo="team/photos/ludo_keizer.jpeg">
+                <div class="photo-circle">
+                    <img src="team/photos/ludo_keizer.jpeg" alt="Ludo Keizer">
+                </div>
+                <div class="member-name">Ludo</div>
+                <div class="member-role">Project Lead &amp; Design</div>
+                <span class="member-more">View profile →</span>
+            </a>
 
-        <a href="team/scott.html" class="team-member">
-            <div class="photo-circle">
-                <div class="placeholder">S</div>
-            </div>
-            <div class="member-name">Scott</div>
-            <div class="member-role">Producer</div>
-        </a>
+            <a href="team/scott.html" class="team-member" style="--i: 2"
+               data-name="Scott" data-role="Health, Vitality & Strength"
+               data-photo="team/photos/scott.jpeg"
+               data-bio="Scott makes you move. He is an expert in health, vitality and strength for individuals and teams. And he is the muscle of our team!">
+                <div class="photo-circle">
+                    <img src="team/photos/scott.jpeg" alt="Scott">
+                </div>
+                <div class="member-name">Scott</div>
+                <div class="member-role">Health, Vitality &amp; Strength</div>
+                <p class="member-bio">Scott makes you move. He is an expert in health, vitality and strength for individuals and teams. And he is the muscle of our team!</p>
+            </a>
 
-        <a href="team/izam.html" class="team-member">
-            <div class="photo-circle">
-                <div class="placeholder">I</div>
-            </div>
-            <div class="member-name">Izam</div>
-            <div class="member-role">Project Lead</div>
-        </a>
+            <a href="team/izam.html" class="team-member" style="--i: 3"
+               data-name="Izam" data-role="Project Lead"
+               data-initial="I">
+                <div class="photo-circle">
+                    <div class="placeholder">I</div>
+                </div>
+                <div class="member-name">Izam</div>
+                <div class="member-role">Project Lead</div>
+                <span class="member-more">View profile →</span>
+            </a>
 
-        <a href="team/ivan.html" class="team-member">
-            <div class="photo-circle">
-                <div class="placeholder">I</div>
-            </div>
-            <div class="member-name">Iván</div>
-            <div class="member-role">Project Design</div>
-        </a>
+            <a href="team/ivan.html" class="team-member" style="--i: 4"
+               data-name="Iván" data-role="Project Design"
+               data-initial="I">
+                <div class="photo-circle">
+                    <div class="placeholder">I</div>
+                </div>
+                <div class="member-name">Iván</div>
+                <div class="member-role">Project Design</div>
+                <span class="member-more">View profile →</span>
+            </a>
 
-        <a href="team/zara.html" class="team-member">
-            <div class="photo-circle">
-                <div class="placeholder">Z</div>
-            </div>
-            <div class="member-name">Zara</div>
-            <div class="member-role">Support</div>
-        </a>
+            <a href="team/zara.html" class="team-member" style="--i: 5"
+               data-name="Zára" data-role="Care & Personal Development"
+               data-photo="team/photos/zara.jpeg"
+               data-bio="Zára really is about care. She inspires and guides people (youth and adults) in personal development journeys.">
+                <div class="photo-circle">
+                    <img src="team/photos/zara.jpeg" alt="Zára">
+                </div>
+                <div class="member-name">Zára</div>
+                <div class="member-role">Care &amp; Personal Development</div>
+                <p class="member-bio">Zára really is about care. She inspires and guides people (youth and adults) in personal development journeys.</p>
+            </a>
 
-        <a href="team/esperanza.html" class="team-member">
-            <div class="photo-circle">
-                <div class="placeholder">E</div>
-            </div>
-            <div class="member-name">Esperanza</div>
-            <div class="member-role">Support</div>
-        </a>
+            <a href="team/esperanza.html" class="team-member" style="--i: 6"
+               data-name="Esperanza" data-role="Wellbeing & Creative Programs"
+               data-photo="team/photos/esperanza.jpeg"
+               data-bio="Esperanza shines. She brightens up rooms and people's lives. With creative programs she helps youth and adults with their wellbeing.">
+                <div class="photo-circle">
+                    <img src="team/photos/esperanza.jpeg" alt="Esperanza">
+                </div>
+                <div class="member-name">Esperanza</div>
+                <div class="member-role">Wellbeing &amp; Creative Programs</div>
+                <p class="member-bio">Esperanza shines. She brightens up rooms and people's lives. With creative programs she helps youth and adults with their wellbeing.</p>
+            </a>
 
-        <a href="team/zaina.html" class="team-member">
-            <div class="photo-circle">
-                <img src="team/photos/zaina_pothof.jpeg" alt="Zaina Pothof">
-            </div>
-            <div class="member-name">Zaina</div>
-            <div class="member-role">Desk Research</div>
-        </a>
+            <a href="team/zaina.html" class="team-member" style="--i: 7"
+               data-name="Zaina Pothof" data-role="Desk Research"
+               data-photo="team/photos/zaina_pothof.jpeg">
+                <div class="photo-circle">
+                    <img src="team/photos/zaina_pothof.jpeg" alt="Zaina Pothof">
+                </div>
+                <div class="member-name">Zaina</div>
+                <div class="member-role">Desk Research</div>
+                <span class="member-more">View profile →</span>
+            </a>
 
-        <a href="team/melissa.html" class="team-member">
-            <div class="photo-circle">
-                <div class="placeholder">M</div>
-            </div>
-            <div class="member-name">Melissa</div>
-            <div class="member-role">Desk Support</div>
-        </a>
-    </section>
+            <a href="team/melissa.html" class="team-member" style="--i: 8"
+               data-name="Melissa" data-role="Soulful Support"
+               data-photo="team/photos/melissa.jpeg"
+               data-bio="Melissa is soulful support. She makes the best food, music, and clothes. She manages lists, locations, and lord knows what else.">
+                <div class="photo-circle">
+                    <img src="team/photos/melissa.jpeg" alt="Melissa">
+                </div>
+                <div class="member-name">Melissa</div>
+                <div class="member-role">Soulful Support</div>
+                <p class="member-bio">Melissa is soulful support. She makes the best food, music, and clothes. She manages lists, locations, and lord knows what else.</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="member-modal" id="memberModal" role="dialog" aria-modal="true" aria-labelledby="modalName">
+        <div class="modal-card">
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <div class="modal-photo" id="modalPhoto"></div>
+            <h2 class="modal-name" id="modalName"></h2>
+            <p class="modal-role" id="modalRole"></p>
+            <p class="modal-bio" id="modalBio"></p>
+            <a href="#" class="modal-link" id="modalLink"><span>View full profile →</span></a>
+        </div>
+    </div>
 
     <footer>
         <span>The Future Firm — Amsterdam</span>
@@ -311,6 +617,7 @@
     </footer>
 
     <script>
+        // Theme toggle
         const toggle = document.querySelector('.theme-toggle');
         const getPreferredTheme = () => {
             const stored = localStorage.getItem('theme');
@@ -325,6 +632,69 @@
         toggle.addEventListener('click', () => {
             const current = document.documentElement.getAttribute('data-theme');
             setTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        // Cursor-following glow on grid
+        const gridWrap = document.querySelector('.team-grid-wrapper');
+        gridWrap.addEventListener('mouseenter', () => gridWrap.classList.add('active'));
+        gridWrap.addEventListener('mouseleave', () => gridWrap.classList.remove('active'));
+        gridWrap.addEventListener('mousemove', (e) => {
+            const rect = gridWrap.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            gridWrap.style.setProperty('--mx', x + '%');
+            gridWrap.style.setProperty('--my', y + '%');
+        });
+
+        // Modal
+        const modal = document.getElementById('memberModal');
+        const modalPhoto = document.getElementById('modalPhoto');
+        const modalName = document.getElementById('modalName');
+        const modalRole = document.getElementById('modalRole');
+        const modalBio = document.getElementById('modalBio');
+        const modalLink = document.getElementById('modalLink');
+        const modalClose = modal.querySelector('.modal-close');
+
+        const openModal = (member) => {
+            const name = member.dataset.name;
+            const role = member.dataset.role;
+            const photo = member.dataset.photo;
+            const initial = member.dataset.initial;
+            const bio = member.dataset.bio || 'More about ' + (name.split(' ')[0]) + ' coming soon.';
+            const profile = member.getAttribute('href');
+
+            modalPhoto.innerHTML = photo
+                ? '<img src="' + photo + '" alt="' + name + '">'
+                : '<div class="placeholder">' + (initial || name.charAt(0)) + '</div>';
+            modalName.textContent = name;
+            modalRole.textContent = role;
+            modalBio.textContent = bio;
+            modalLink.setAttribute('href', profile);
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeModal = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        document.querySelectorAll('.team-member').forEach((m) => {
+            m.addEventListener('click', (e) => {
+                // Allow ctrl/cmd/middle-click to open profile directly in new tab
+                if (e.ctrlKey || e.metaKey || e.button === 1) return;
+                e.preventDefault();
+                openModal(m);
+            });
+        });
+
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
         });
     </script>
 
