@@ -14,3 +14,11 @@
 - Drafted email to Gijs requesting missing info
 - Fixed CLAUDE.md: corrected hosting from "Cloudflare Pages" to "GitHub Pages"
 - Removed Het Netwerk nav link from index.html (pending approval)
+
+## 2026-04-23
+**Work time:** ~0.25h
+
+- Verified .nl + .com transfer from Yourhosting to Porkbun
+- .nl: live NS al op Porkbun, klaar om bij Yourhosting op te zeggen
+- .com: registrar = Porkbun, maar NS stonden nog op Yourhosting → Wijnand heeft NS bij Porkbun omgezet naar porkbun.com nameservers, site blijft op 200
+- Beide domeinen nu veilig op te zeggen bij Yourhosting
