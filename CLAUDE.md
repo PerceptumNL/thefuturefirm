@@ -2,9 +2,6 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Jortt
-- **Klant-ID:** 0c4b3e28-83ed-4aaf-81d4-f030acdbe1ce
-
 ## Project Overview
 
 The Future Firm (thefuturefirm.com) — website for a culture and strategy transformation consultancy founded by Gijs Pothof. Client of Bollenstreekdigitaal, a brand under Perceptum.
@@ -26,7 +23,8 @@ The Future Firm (thefuturefirm.com) — website for a culture and strategy trans
 - **Analytics**: LiveView Analytics (Perceptum product), cookieless, loaded via `analytics.perceptum.nl/liveview.js` with key `lv_live_FKiLqqr_XVGGvdsb93ct6i6ziZgJ_EJS`
 - **Privacy page** is in Dutch (`lang="nl"`), noindexed
 - **Contact**: gijs.pothof@thefuturefirm.com
-- **KvK**: 52970833
+- **KvK**: 52967972 (GP Beheer B.V., trade name The Future Firm). The privacy page still shows 52970833, an older, different BV: fix once Gijs confirms.
+- **Internal files** (agreement, worklog, service, site-care) are gitignored and excluded in `_config.yml`: this repo and site are public.
 
 ## Lencioni App (when working in lencioni/app/)
 

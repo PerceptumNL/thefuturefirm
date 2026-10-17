@@ -1,0 +1,9 @@
+# GitHub Pages: never publish internal files
+exclude:
+  - AGREEMENT.md
+  - CLAUDE.md
+  - WORKLOG.md
+  - SERVICE.md
+  - site-care.json
+  - site-care
+  - lencioni/PRD_Five_Dysfunctions_Assessment.docx

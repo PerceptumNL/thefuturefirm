@@ -3,3 +3,5 @@ Disallow: /v2/
 Disallow: /network.html
 Disallow: /team.html
 Disallow: /team/
+
+Sitemap: https://thefuturefirm.com/sitemap.xml

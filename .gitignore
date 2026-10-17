@@ -6,3 +6,10 @@ node_modules/
 .env.*
 .claude/
 lencioni/app/
+
+# Internal Perceptum files: keep out of this public repo
+AGREEMENT.md
+WORKLOG.md
+SERVICE.md
+site-care.json
+site-care/
