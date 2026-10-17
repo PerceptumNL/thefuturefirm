@@ -898,7 +898,7 @@
                         <h4 class="preview-name"></h4>
                         <p class="preview-role"></p>
                         <p class="preview-bio"></p>
-                        <a href="#" class="preview-link">View full profile &#8594;</a>
+                        <a href="#" class="preview-link" style="display:none"></a>
                     </div>
                 </div>
             </aside>
@@ -959,7 +959,7 @@
                         <h4 class="preview-name"></h4>
                         <p class="preview-role"></p>
                         <p class="preview-bio"></p>
-                        <a href="#" class="preview-link">View full profile &#8594;</a>
+                        <a href="#" class="preview-link" style="display:none"></a>
                     </div>
                 </div>
             </aside>
@@ -1063,14 +1063,15 @@
                 } else {
                     bioEl.style.display = 'none';
                 }
-                linkEl.setAttribute('href', d.href);
-                linkEl.textContent = (d.linkLabel || 'View full profile') + ' \u2192';
-                if (/^https?:/.test(d.href)) {
+                // Only partners with their own website get a link in the card
+                if (d.linkLabel) {
+                    linkEl.setAttribute('href', d.href);
+                    linkEl.textContent = d.linkLabel + ' \u2192';
                     linkEl.setAttribute('target', '_blank');
                     linkEl.setAttribute('rel', 'noopener');
+                    linkEl.style.display = '';
                 } else {
-                    linkEl.removeAttribute('target');
-                    linkEl.removeAttribute('rel');
+                    linkEl.style.display = 'none';
                 }
                 positionPanel(item);
                 panel.classList.add('active');
