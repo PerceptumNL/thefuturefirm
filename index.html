@@ -828,7 +828,7 @@
 
     <section class="leadership">
         <div class="leadership-header">
-            <span class="section-label">Leadership &amp; Team</span>
+            <span class="section-label">Leadership, Partners &amp; Team</span>
             <h2 class="leadership-title">Led by <span class="warm">curiosity</span>,<br>built by people.</h2>
         </div>
 
@@ -859,14 +859,14 @@
         </div>
 
         <div class="team-divider">
-            <span class="section-label">And the team</span>
+            <span class="section-label">Partners</span>
             <h3 class="team-divider-title">People Gijs <em>builds with</em>.</h3>
         </div>
 
-        <div class="team-grid-layout" id="teamLayout">
+        <div class="team-grid-layout">
             <ul class="team-items">
                 <li class="team-item"
-                    data-name="Ludo Keizer" data-role="Project Lead &amp; Design"
+                    data-name="Ludo Keizer" data-role="Project Lead &amp; Logistics Design · Europe, Africa, North America, Australasia"
                     data-photo="team/photos/ludo_keizer.jpeg"
                     data-href="team/ludo.html">
                     <a href="team/ludo.html" class="team-item-link">
@@ -874,6 +874,43 @@
                     </a>
                 </li>
 
+                <li class="team-item"
+                    data-name="Iván Capdevila" data-role="Project Lead &amp; Logistics Design · Iberia, Latin America"
+                    data-href="https://www.lanomadica.com/" data-link-label="Visit La Nomàdica">
+                    <a href="https://www.lanomadica.com/" class="team-item-link" target="_blank" rel="noopener">
+                        <span class="team-item-name">Iván Capdevila</span>
+                    </a>
+                </li>
+
+                <li class="team-item"
+                    data-name="Erik Wiebes" data-role="Graphic Design &amp; Artwork"
+                    data-href="https://www.lemonpress.nl/" data-link-label="Visit Lemonpress">
+                    <a href="https://www.lemonpress.nl/" class="team-item-link" target="_blank" rel="noopener">
+                        <span class="team-item-name">Erik Wiebes</span>
+                    </a>
+                </li>
+            </ul>
+
+            <aside class="team-preview-panel" aria-hidden="true">
+                <div class="preview-card">
+                    <div class="preview-photo"></div>
+                    <div class="preview-text">
+                        <h4 class="preview-name"></h4>
+                        <p class="preview-role"></p>
+                        <p class="preview-bio"></p>
+                        <a href="#" class="preview-link">View full profile &#8594;</a>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <div class="team-divider">
+            <span class="section-label">Team</span>
+            <h3 class="team-divider-title">The people who <em>make it happen</em>.</h3>
+        </div>
+
+        <div class="team-grid-layout">
+            <ul class="team-items">
                 <li class="team-item"
                     data-name="Scott Everduim" data-role="Health, Vitality &amp; Strength"
                     data-photo="team/photos/scott.jpeg"
@@ -915,14 +952,14 @@
                 </li>
             </ul>
 
-            <aside class="team-preview-panel" id="teamPreviewPanel" aria-hidden="true">
-                <div class="preview-card" id="previewCard">
-                    <div class="preview-photo" id="previewPhoto"></div>
+            <aside class="team-preview-panel" aria-hidden="true">
+                <div class="preview-card">
+                    <div class="preview-photo"></div>
                     <div class="preview-text">
-                        <h4 class="preview-name" id="previewName"></h4>
-                        <p class="preview-role" id="previewRole"></p>
-                        <p class="preview-bio" id="previewBio"></p>
-                        <a href="#" class="preview-link" id="previewLink">View full profile &#8594;</a>
+                        <h4 class="preview-name"></h4>
+                        <p class="preview-role"></p>
+                        <p class="preview-bio"></p>
+                        <a href="#" class="preview-link">View full profile &#8594;</a>
                     </div>
                 </div>
             </aside>
@@ -987,17 +1024,16 @@
         });
 
         // Team list — click a name, fold out profile preview to the right
-        (function() {
-            const layout = document.getElementById('teamLayout');
-            const panel = document.getElementById('teamPreviewPanel');
-            if (!layout || !panel) return;
+        document.querySelectorAll('.team-grid-layout').forEach(function(layout) {
+            const panel = layout.querySelector('.team-preview-panel');
+            if (!panel) return;
 
             const items = layout.querySelectorAll('.team-item');
-            const photoEl = document.getElementById('previewPhoto');
-            const nameEl = document.getElementById('previewName');
-            const roleEl = document.getElementById('previewRole');
-            const bioEl = document.getElementById('previewBio');
-            const linkEl = document.getElementById('previewLink');
+            const photoEl = panel.querySelector('.preview-photo');
+            const nameEl = panel.querySelector('.preview-name');
+            const roleEl = panel.querySelector('.preview-role');
+            const bioEl = panel.querySelector('.preview-bio');
+            const linkEl = panel.querySelector('.preview-link');
 
             let currentKey = null;
 
@@ -1028,6 +1064,14 @@
                     bioEl.style.display = 'none';
                 }
                 linkEl.setAttribute('href', d.href);
+                linkEl.textContent = (d.linkLabel || 'View full profile') + ' \u2192';
+                if (/^https?:/.test(d.href)) {
+                    linkEl.setAttribute('target', '_blank');
+                    linkEl.setAttribute('rel', 'noopener');
+                } else {
+                    linkEl.removeAttribute('target');
+                    linkEl.removeAttribute('rel');
+                }
                 positionPanel(item);
                 panel.classList.add('active');
             };
@@ -1050,6 +1094,8 @@
                 link.addEventListener('click', (e) => {
                     // Allow ctrl/cmd/middle-click to navigate directly (open in new tab)
                     if (e.ctrlKey || e.metaKey || e.button === 1) return;
+                    // Mobile: the preview panel is hidden, so follow the link
+                    if (getComputedStyle(panel).display === 'none') return;
                     e.preventDefault();
                     if (item.dataset.href === currentKey) {
                         hide();
@@ -1063,7 +1109,7 @@
             document.addEventListener('click', (e) => {
                 if (currentKey && !layout.contains(e.target)) hide();
             });
-        })();
+        });
 
     </script>
 
